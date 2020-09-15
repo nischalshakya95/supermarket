@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SuperMarket Demo</string>
+    <string name="title">title</string>
+    <string name="bank_name_image_here">Bank name image here</string>
+</resources>
