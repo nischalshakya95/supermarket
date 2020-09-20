@@ -1,10 +1,10 @@
-package com.dinube.supermarket.model;
+package com.dinube.supermarket.model.data;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Data<T> {
+public class ListData<T> {
 
     @SerializedName("data")
     private List<T> t;
