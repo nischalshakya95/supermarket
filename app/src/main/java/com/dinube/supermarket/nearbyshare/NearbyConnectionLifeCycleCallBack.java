@@ -15,14 +15,16 @@ import com.google.android.gms.nearby.connection.ConnectionResolution;
 import com.google.android.gms.nearby.connection.ConnectionsStatusCodes;
 import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
-import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 
 public class NearbyConnectionLifeCycleCallBack extends ConnectionLifecycleCallback {
 
     private Context context;
 
-    public NearbyConnectionLifeCycleCallBack(Context context) {
+    private PayloadCallback payloadCallback;
+
+    public NearbyConnectionLifeCycleCallBack(Context context, PayloadCallback payloadCallback) {
         this.context = context;
+        this.payloadCallback = payloadCallback;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class NearbyConnectionLifeCycleCallBack extends ConnectionLifecycleCallba
                         (DialogInterface dialog, int which) ->
                                 // The user confirmed, so we can accept the connection.
                                 Nearby.getConnectionsClient(context)
-                                        .acceptConnection(endpointId, new NearbyPayloadCallback(context)))
+                                        .acceptConnection(endpointId, payloadCallback))
                 .setNegativeButton(
                         android.R.string.cancel,
                         (DialogInterface dialog, int which) ->
@@ -67,26 +69,5 @@ public class NearbyConnectionLifeCycleCallBack extends ConnectionLifecycleCallba
     @Override
     public void onDisconnected(@NonNull String s) {
         UiUtils.showToast(context, "We've been disconnected from the endpoint. No more data can be send or received.");
-    }
-
-    static class NearbyPayloadCallback extends PayloadCallback {
-
-        private Context context;
-
-        public NearbyPayloadCallback(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
-            byte[] receivedBytes = payload.asBytes();
-            String message = new String(receivedBytes);
-            UiUtils.showToast(context, message);
-        }
-
-        @Override
-        public void onPayloadTransferUpdate(@NonNull String s, @NonNull PayloadTransferUpdate payloadTransferUpdate) {
-
-        }
     }
 }

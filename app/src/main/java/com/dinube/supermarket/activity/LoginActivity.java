@@ -50,6 +50,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login() {
+        Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
+        startActivity(intent);
+        UiUtils.showToast(context, "Login Successful");
+    }
+
+    private void callAPI(){
         LoginRequest loginRequest = new LoginRequest(phoneNumber.getText().toString(), password.getText().toString(), "2332", "0", "0", "");
         Call<LoginResponse> call = dinubeAPIService.login(loginRequest);
 

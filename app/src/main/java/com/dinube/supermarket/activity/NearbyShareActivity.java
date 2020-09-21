@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,8 @@ public class NearbyShareActivity extends AppCompatActivity {
 
     private Context context;
 
+    private TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,10 +37,11 @@ public class NearbyShareActivity extends AppCompatActivity {
         endpointName = Build.MODEL;
 
         advertiseSwitch = findViewById(R.id.advertiseSwitch);
+        textView = findViewById(R.id.amountPlainText);
 
         advertiseSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                NearbyAdvertise.startAdvertising(context, endpointName);
+                NearbyAdvertise.startAdvertising(context, endpointName, new NearbyPayloadCallback());
             } else {
                 NearbyAdvertise.stopAdvertising(context, endpointName);
             }
@@ -50,7 +54,8 @@ public class NearbyShareActivity extends AppCompatActivity {
         public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
             byte[] receivedBytes = payload.asBytes();
             String message = new String(receivedBytes);
-            UiUtils.showToast(context, message);
+            UiUtils.showToast(context, "Total purchase price " +message);
+            textView.setText(message);
         }
 
         @Override

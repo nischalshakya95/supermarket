@@ -27,7 +27,6 @@
         <activity
             android:name=".activity.NearbyShareActivity"
             android:parentActivityName=".activity.PaymentActivity" />
-        <activity android:name=".activity.PaymentInitiateActivity" />
         <activity android:name=".activity.PaymentActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
