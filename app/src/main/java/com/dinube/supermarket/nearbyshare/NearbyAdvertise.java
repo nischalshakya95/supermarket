@@ -9,9 +9,12 @@ import com.google.android.gms.nearby.connection.Strategy;
 
 public class NearbyAdvertise {
 
+    // Note: SERVICE_ID MUST BE SAME OF START DISCOVERY SECTION OF NEARBY SHARE ELSE THE DEVICE WONT BE DISCOVERABLE
+    private static final String SERVICE_ID = "com.dinube.nearbysharedemo";
+
     public static void startAdvertising(Context context, String endpointName) {
         AdvertisingOptions advertisingOptions = new AdvertisingOptions.Builder().setStrategy(Strategy.P2P_CLUSTER).build();
-        Nearby.getConnectionsClient(context).startAdvertising(endpointName, "com.dinube.supermarket",
+        Nearby.getConnectionsClient(context).startAdvertising(endpointName, SERVICE_ID,
                 new NearbyConnectionLifeCycleCallBack(context), advertisingOptions)
                 .addOnSuccessListener((Void unused) -> {
                     UiUtils.showToast(context, "Advertising " + endpointName);
