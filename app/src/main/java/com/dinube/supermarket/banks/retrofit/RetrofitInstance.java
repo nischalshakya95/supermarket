@@ -1,4 +1,4 @@
-package com.dinube.supermarket.retrofit;
+package com.dinube.supermarket.banks.retrofit;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

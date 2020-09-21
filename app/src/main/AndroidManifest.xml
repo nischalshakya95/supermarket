@@ -13,9 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".activity.BanksActivity">
+        <activity android:name=".activity.NearbyShareActivity" />
+        <activity android:name=".activity.PaymentInitiateActivity" />
+        <activity android:name=".activity.PaymentActivity" />
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

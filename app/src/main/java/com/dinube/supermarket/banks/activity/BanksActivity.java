@@ -1,4 +1,4 @@
-package com.dinube.supermarket.activity;
+package com.dinube.supermarket.banks.activity;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dinube.supermarket.R;
-import com.dinube.supermarket.adapters.CustomAdapter;
-import com.dinube.supermarket.model.Banks;
-import com.dinube.supermarket.model.ConsentResponse;
-import com.dinube.supermarket.model.data.BankData;
-import com.dinube.supermarket.model.data.ConsentResponseData;
-import com.dinube.supermarket.retrofit.RetrofitInstance;
-import com.dinube.supermarket.service.AfterBankDataService;
+import com.dinube.supermarket.banks.adapters.CustomAdapter;
+import com.dinube.supermarket.banks.model.Banks;
+import com.dinube.supermarket.banks.model.ConsentResponse;
+import com.dinube.supermarket.banks.model.data.BankData;
+import com.dinube.supermarket.banks.model.data.ConsentResponseData;
+import com.dinube.supermarket.banks.retrofit.RetrofitInstance;
+import com.dinube.supermarket.banks.service.AfterBankDataService;
 
 import java.util.List;
 

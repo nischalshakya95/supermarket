@@ -1,4 +1,4 @@
-package com.dinube.supermarket.model;
+package com.dinube.supermarket.banks.model;
 
 import com.google.gson.annotations.SerializedName;
 

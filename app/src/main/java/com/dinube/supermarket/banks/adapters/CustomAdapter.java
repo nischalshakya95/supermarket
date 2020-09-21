@@ -1,4 +1,4 @@
-package com.dinube.supermarket.adapters;
+package com.dinube.supermarket.banks.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dinube.supermarket.R;
-import com.dinube.supermarket.model.Banks;
+import com.dinube.supermarket.banks.model.Banks;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 

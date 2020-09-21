@@ -1,7 +1,7 @@
-package com.dinube.supermarket.service;
+package com.dinube.supermarket.banks.service;
 
-import com.dinube.supermarket.model.data.BankData;
-import com.dinube.supermarket.model.data.ConsentResponseData;
+import com.dinube.supermarket.banks.model.data.BankData;
+import com.dinube.supermarket.banks.model.data.ConsentResponseData;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
