@@ -2,25 +2,43 @@ package com.dinube.supermarket.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dinube.supermarket.R;
+import com.dinube.supermarket.afterbank.exception.AfterBankException;
+import com.dinube.supermarket.afterbank.request.PaymentInitiateRequest;
+import com.dinube.supermarket.afterbank.response.PaymentInitiateResponse;
+import com.dinube.supermarket.afterbank.response.PaymentInitiateResponseData;
+import com.dinube.supermarket.afterbank.retrofit.AfterBankRetrofit;
+import com.dinube.supermarket.afterbank.service.AfterBankAPIService;
 import com.dinube.supermarket.nearbyshare.NearbyAdvertise;
 import com.dinube.supermarket.utils.UiUtils;
 import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Converter;
+import retrofit2.Response;
+
 public class NearbyShareActivity extends AppCompatActivity {
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
-    Switch advertiseSwitch;
+    private Switch advertiseSwitch;
 
     private String endpointName;
 
@@ -38,12 +56,57 @@ public class NearbyShareActivity extends AppCompatActivity {
 
         advertiseSwitch = findViewById(R.id.advertiseSwitch);
         textView = findViewById(R.id.amountPlainText);
+        Button initiatePayment = findViewById(R.id.paymentInitiate);
 
         advertiseSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 NearbyAdvertise.startAdvertising(context, endpointName, new NearbyPayloadCallback());
             } else {
                 NearbyAdvertise.stopAdvertising(context, endpointName);
+            }
+        });
+
+        initiatePayment.setOnClickListener((click) -> {
+            initiatePayment();
+        });
+    }
+
+    private void initiatePayment() {
+        PaymentInitiateRequest paymentInitiateRequest = new PaymentInitiateRequest(Integer.parseInt(textView.getText().toString()));
+        System.out.println(paymentInitiateRequest.toString());
+        AfterBankAPIService afterBankAPIService = AfterBankRetrofit.getAfterBankAPIInstance();
+        Call<PaymentInitiateResponseData> call = afterBankAPIService.paymentInitiate(paymentInitiateRequest);
+
+        call.enqueue(new Callback<PaymentInitiateResponseData>() {
+
+            @SuppressLint("SetJavaScriptEnabled")
+            @Override
+            public void onResponse(Call<PaymentInitiateResponseData> call, Response<PaymentInitiateResponseData> response) {
+                assert response.body() != null;
+                if (response.code() == 400) {
+                    Converter<ResponseBody, AfterBankException> converter = AfterBankRetrofit.getInstance().responseBodyConverter(AfterBankException.class, new Annotation[0]);
+                    try {
+
+                        assert response.errorBody() != null;
+                        AfterBankException afterBankException = converter.convert(response.errorBody());
+                        assert afterBankException != null;
+
+                        Toast.makeText(context, afterBankException.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    PaymentInitiateResponse paymentInitiateResponse = response.body().getT();
+                    Toast.makeText(context, paymentInitiateResponse.getFollow(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, WebViewActivity.class);
+                    intent.putExtra("url", paymentInitiateResponse.getFollow());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PaymentInitiateResponseData> call, Throwable t) {
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -54,7 +117,7 @@ public class NearbyShareActivity extends AppCompatActivity {
         public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
             byte[] receivedBytes = payload.asBytes();
             String message = new String(receivedBytes);
-            UiUtils.showToast(context, "Total purchase price " +message);
+            UiUtils.showToast(context, "Total purchase price " + message);
             textView.setText(message);
         }
 

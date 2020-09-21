@@ -36,7 +36,7 @@
         tools:ignore="Autofill,LabelFor" />
 
     <Button
-        android:id="@+id/payButton"
+        android:id="@+id/paymentInitiate"
         android:layout_width="208dp"
         android:layout_height="64dp"
         android:text="@string/initiate_payment"
