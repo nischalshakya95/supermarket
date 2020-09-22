@@ -84,9 +84,10 @@ public class WebViewActivity extends AppCompatActivity {
             if (url.contentEquals(TempVariables.AFTER_BANK_REDIRECT_URL)) {
                 view.stopLoading();
                 view.setVisibility(View.GONE);
-                PaymentSuccessResponse paymentSuccessResponse = getPaymentStatus();
+//                PaymentSuccessResponse paymentSuccessResponse = getPaymentStatus();
                 Intent intent = new Intent(context, PaymentActivity.class);
-                intent.putExtra("paymentId", paymentSuccessResponse.getPaymentId());
+//                intent.putExtra("paymentId", paymentSuccessResponse.getPaymentId());
+                UiUtils.showToast(getApplicationContext(), "Payment Successful");
                 startActivity(intent);
             }
         }
