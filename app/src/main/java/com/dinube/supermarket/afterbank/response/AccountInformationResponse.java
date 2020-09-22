@@ -10,7 +10,7 @@ public class AccountInformationResponse {
 
     private String iban;
 
-    private Double amount;
+    private Double balance;
 
     private String currency;
 
@@ -46,12 +46,12 @@ public class AccountInformationResponse {
         this.iban = iban;
     }
 
-    public Double getAmount() {
-        return amount;
+    public Double getBalance() {
+        return balance;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
     public String getCurrency() {
@@ -69,7 +69,7 @@ public class AccountInformationResponse {
                 ", type='" + type + '\'' +
                 ", description='" + description + '\'' +
                 ", iban='" + iban + '\'' +
-                ", amount=" + amount +
+                ", amount=" + balance +
                 ", currency='" + currency + '\'' +
                 '}';
     }

@@ -54,6 +54,10 @@ public class NearbyShareActivity extends AppCompatActivity {
 
     private IntentIntegrator qrScan;
 
+    private TextView ibanNumberView;
+
+    private TextView balanceView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,8 @@ public class NearbyShareActivity extends AppCompatActivity {
 
         advertiseSwitch = findViewById(R.id.advertiseSwitch);
         textView = findViewById(R.id.amountPlainText);
+        ibanNumberView = findViewById(R.id.ibanNumber);
+        balanceView = findViewById(R.id.balanceView);
 
         Button initiatePayment = findViewById(R.id.paymentInitiate);
         Button readQRButton = findViewById(R.id.scanQR);
@@ -122,6 +128,9 @@ public class NearbyShareActivity extends AppCompatActivity {
                 assert  response.body() != null;
                 AccountInformationResponse accountInformationResponse = response.body().getT();
                 UiUtils.showToast(context, accountInformationResponse.toString());
+
+                balanceView.setText(String.valueOf(accountInformationResponse.getBalance()));
+                ibanNumberView.setText(String.valueOf(accountInformationResponse.getIban()));
             }
 
             @Override
