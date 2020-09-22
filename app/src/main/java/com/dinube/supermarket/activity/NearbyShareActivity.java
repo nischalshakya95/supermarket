@@ -17,11 +17,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dinube.supermarket.R;
 import com.dinube.supermarket.afterbank.exception.AfterBankException;
 import com.dinube.supermarket.afterbank.request.PaymentInitiateRequest;
+import com.dinube.supermarket.afterbank.response.AccountInformationResponse;
+import com.dinube.supermarket.afterbank.response.AccountInformationResponseData;
 import com.dinube.supermarket.afterbank.response.PaymentInitiateResponse;
 import com.dinube.supermarket.afterbank.response.PaymentInitiateResponseData;
 import com.dinube.supermarket.afterbank.retrofit.AfterBankRetrofit;
 import com.dinube.supermarket.afterbank.service.AfterBankAPIService;
 import com.dinube.supermarket.nearbyshare.NearbyAdvertise;
+import com.dinube.supermarket.utils.TempVariables;
 import com.dinube.supermarket.utils.UiUtils;
 import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
@@ -51,6 +54,7 @@ public class NearbyShareActivity extends AppCompatActivity {
 
     private IntentIntegrator qrScan;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +68,7 @@ public class NearbyShareActivity extends AppCompatActivity {
 
         Button initiatePayment = findViewById(R.id.paymentInitiate);
         Button readQRButton = findViewById(R.id.scanQR);
+        Button checkBalanceButton = findViewById(R.id.checkBalanceButton);
 
         qrScan = new IntentIntegrator(this);
 
@@ -79,8 +84,12 @@ public class NearbyShareActivity extends AppCompatActivity {
             initiatePayment();
         });
 
-        readQRButton.setOnClickListener( click -> {
+        readQRButton.setOnClickListener(click -> {
             qrScan.initiateScan();
+        });
+
+        checkBalanceButton.setOnClickListener(click -> {
+            checkBalance();
         });
     }
 
@@ -98,10 +107,34 @@ public class NearbyShareActivity extends AppCompatActivity {
         }
     }
 
+
+    private AfterBankAPIService getAfterBankService() {
+        return AfterBankRetrofit.getAfterBankAPIInstance();
+    }
+
+    private void checkBalance() {
+        AfterBankAPIService afterBankAPIService = getAfterBankService();
+        Call<AccountInformationResponseData> call = afterBankAPIService.getAccountInformation(TempVariables.SOURCE_IBAN_NUMBER);
+
+        call.enqueue(new Callback<AccountInformationResponseData>() {
+            @Override
+            public void onResponse(Call<AccountInformationResponseData> call, Response<AccountInformationResponseData> response) {
+                assert  response.body() != null;
+                AccountInformationResponse accountInformationResponse = response.body().getT();
+                UiUtils.showToast(context, accountInformationResponse.toString());
+            }
+
+            @Override
+            public void onFailure(Call<AccountInformationResponseData> call, Throwable t) {
+                UiUtils.showToast(context, t.getMessage());
+            }
+        });
+    }
+
+
     private void initiatePayment() {
         PaymentInitiateRequest paymentInitiateRequest = new PaymentInitiateRequest(Integer.parseInt(textView.getText().toString()));
-        System.out.println(paymentInitiateRequest.toString());
-        AfterBankAPIService afterBankAPIService = AfterBankRetrofit.getAfterBankAPIInstance();
+        AfterBankAPIService afterBankAPIService = getAfterBankService();
         Call<PaymentInitiateResponseData> call = afterBankAPIService.paymentInitiate(paymentInitiateRequest);
 
         call.enqueue(new Callback<PaymentInitiateResponseData>() {

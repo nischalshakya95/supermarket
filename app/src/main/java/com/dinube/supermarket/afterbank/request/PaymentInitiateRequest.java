@@ -32,7 +32,7 @@ public class PaymentInitiateRequest {
         this.token = "sandbox.r1v4qkan";
         this.paymentType = "normal";
         this.currency = "EUR";
-        this.sourceIBAN = "ES2501822200160201933547";
+        this.sourceIBAN = TempVariables.SOURCE_IBAN_NUMBER;
         this.destinationIBAN = "ES1801822200120201933578";
         this.destinationCreditorName = "Nischal Shakya";
         this.paymentDescription = "Utility Purpose";

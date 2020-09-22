@@ -1,6 +1,7 @@
 package com.dinube.supermarket.afterbank.service;
 
 import com.dinube.supermarket.afterbank.request.PaymentInitiateRequest;
+import com.dinube.supermarket.afterbank.response.AccountInformationResponseData;
 import com.dinube.supermarket.afterbank.response.PaymentInitiateResponseData;
 import com.dinube.supermarket.afterbank.response.PaymentStatusResponseData;
 import com.dinube.supermarket.afterbank.response.PaymentSuccessResponseData;
@@ -21,4 +22,7 @@ public interface AfterBankAPIService {
 
     @GET("/payment/status")
     Call<PaymentStatusResponseData> getPaymentStatus(@Query("paymentId") String paymentId);
+
+    @GET("/account/account-information")
+    Call<AccountInformationResponseData> getAccountInformation(@Query("accountId") String accountId);
 }
