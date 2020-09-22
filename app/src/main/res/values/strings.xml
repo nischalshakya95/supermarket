@@ -6,4 +6,5 @@
     <string name="pay">Pay WITH QR Scanner</string>
     <string name="advertise">Advertise</string>
     <string name="initiate_payment">Initiate Payment</string>
+    <string name="scan_qr">Scan QR</string>
 </resources>

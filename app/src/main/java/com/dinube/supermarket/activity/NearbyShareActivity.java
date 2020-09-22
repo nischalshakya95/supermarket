@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dinube.supermarket.R;
@@ -25,6 +26,8 @@ import com.dinube.supermarket.utils.UiUtils;
 import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -46,6 +49,8 @@ public class NearbyShareActivity extends AppCompatActivity {
 
     private TextView textView;
 
+    private IntentIntegrator qrScan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +61,11 @@ public class NearbyShareActivity extends AppCompatActivity {
 
         advertiseSwitch = findViewById(R.id.advertiseSwitch);
         textView = findViewById(R.id.amountPlainText);
+
         Button initiatePayment = findViewById(R.id.paymentInitiate);
+        Button readQRButton = findViewById(R.id.scanQR);
+
+        qrScan = new IntentIntegrator(this);
 
         advertiseSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -69,6 +78,24 @@ public class NearbyShareActivity extends AppCompatActivity {
         initiatePayment.setOnClickListener((click) -> {
             initiatePayment();
         });
+
+        readQRButton.setOnClickListener( click -> {
+            qrScan.initiateScan();
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show();
+            } else {
+                textView.setText(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void initiatePayment() {

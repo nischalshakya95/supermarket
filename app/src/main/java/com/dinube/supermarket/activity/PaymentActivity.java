@@ -25,6 +25,10 @@ public class PaymentActivity extends AppCompatActivity {
         payWithNearbyShareButton.setOnClickListener(l -> {
             initializePayWithNearby();
         });
+
+        payWithQRScannerButton.setOnClickListener(click -> {
+            initializePayWithNearby();
+        });
     }
 
     private void initializePayWithNearby() {
