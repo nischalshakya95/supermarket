@@ -128,6 +128,7 @@ public class NearbyShareActivity extends AppCompatActivity {
                     Intent intent = new Intent(context, WebViewActivity.class);
                     intent.putExtra("url", paymentInitiateResponse.getFollow());
                     startActivity(intent);
+                    NearbyAdvertise.stopAdvertising(context, endpointName);
                 }
             }
 

@@ -1,6 +1,7 @@
 package com.dinube.supermarket.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.dinube.supermarket.afterbank.response.PaymentSuccessResponseData;
 import com.dinube.supermarket.afterbank.retrofit.AfterBankRetrofit;
 import com.dinube.supermarket.afterbank.service.AfterBankAPIService;
 import com.dinube.supermarket.utils.TempVariables;
+import com.dinube.supermarket.utils.UiUtils;
 
 import java.util.Objects;
 
@@ -29,11 +31,16 @@ public class WebViewActivity extends AppCompatActivity {
 
     PaymentSuccessResponse paymentSuccessResponse;
 
+    private Context context;
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
+
+        context = this;
+
         WebView webView = findViewById(R.id.after_bank_web_view);
         webView.setWebViewClient(new CustomWebView());
         webView.getSettings().setJavaScriptEnabled(true);
@@ -52,13 +59,12 @@ public class WebViewActivity extends AppCompatActivity {
             public void onResponse(Call<PaymentSuccessResponseData> call, Response<PaymentSuccessResponseData> response) {
                 assert response.body() != null;
                 paymentSuccessResponse = response.body().getT();
-                System.out.println(paymentSuccessResponse.toString());
-                Toast.makeText(getApplicationContext(), paymentSuccessResponse.getPaymentId(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, paymentSuccessResponse.getPaymentId(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<PaymentSuccessResponseData> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         return paymentSuccessResponse;
@@ -79,8 +85,8 @@ public class WebViewActivity extends AppCompatActivity {
                 view.stopLoading();
                 view.setVisibility(View.GONE);
                 PaymentSuccessResponse paymentSuccessResponse = getPaymentStatus();
-                Intent intent = new Intent(getApplicationContext(), NearbyShareActivity.class);
-//                intent.putExtra("paymentId", paymentSuccessResponse.getPaymentId());
+                Intent intent = new Intent(context, PaymentActivity.class);
+                intent.putExtra("paymentId", paymentSuccessResponse.getPaymentId());
                 startActivity(intent);
             }
         }
