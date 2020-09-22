@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SuperMarket Demo</string>
+    <string name="app_name">Dinube Demo App</string>
     <string name="title">title</string>
     <string name="bank_name_image_here">Bank name image here</string>
     <string name="login">Login</string>
@@ -7,4 +7,6 @@
     <string name="advertise">Advertise</string>
     <string name="initiate_payment">Initiate Payment</string>
     <string name="scan_qr">Scan QR</string>
+    <string name="user_login_portal">User Login Portal</string>
+    <string name="check_balance">Check Balance</string>
 </resources>
