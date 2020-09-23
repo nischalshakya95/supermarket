@@ -50,12 +50,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login() {
-        Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
-        startActivity(intent);
-        UiUtils.showToast(context, "Login Successful");
+        if (phoneNumber.getText().toString().equals("3400000000") && password.getText().toString().equals("no-pass")) {
+            Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
+            startActivity(intent);
+            UiUtils.showToast(context, "Login Successful");
+        } else {
+            UiUtils.showToast(context, "Invalid Credentials");
+        }
+
     }
 
-    private void callAPI(){
+    private void callAPI() {
         LoginRequest loginRequest = new LoginRequest(phoneNumber.getText().toString(), password.getText().toString(), "2332", "0", "0", "");
         Call<LoginResponse> call = dinubeAPIService.login(loginRequest);
 
