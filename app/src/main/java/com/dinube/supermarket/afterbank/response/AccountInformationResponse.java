@@ -61,16 +61,4 @@ public class AccountInformationResponse {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
-
-    @Override
-    public String toString() {
-        return "AccountInformationResponse{" +
-                "product='" + product + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                ", iban='" + iban + '\'' +
-                ", amount=" + balance +
-                ", currency='" + currency + '\'' +
-                '}';
-    }
 }

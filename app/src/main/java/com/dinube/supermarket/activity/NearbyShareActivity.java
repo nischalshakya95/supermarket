@@ -113,13 +113,8 @@ public class NearbyShareActivity extends AppCompatActivity {
         }
     }
 
-
-    private AfterBankAPIService getAfterBankService() {
-        return AfterBankRetrofit.getAfterBankAPIInstance();
-    }
-
     private void checkBalance() {
-        AfterBankAPIService afterBankAPIService = getAfterBankService();
+        AfterBankAPIService afterBankAPIService = AfterBankRetrofit.getAfterBankAPIInstance();
         Call<AccountInformationResponseData> call = afterBankAPIService.getAccountInformation(TempVariables.SOURCE_IBAN_NUMBER);
 
         call.enqueue(new Callback<AccountInformationResponseData>() {
@@ -127,7 +122,6 @@ public class NearbyShareActivity extends AppCompatActivity {
             public void onResponse(Call<AccountInformationResponseData> call, Response<AccountInformationResponseData> response) {
                 assert  response.body() != null;
                 AccountInformationResponse accountInformationResponse = response.body().getT();
-                UiUtils.showToast(context, accountInformationResponse.toString());
 
                 balanceView.setText(String.valueOf(accountInformationResponse.getBalance()));
                 ibanNumberView.setText(String.valueOf(accountInformationResponse.getIban()));
@@ -143,7 +137,7 @@ public class NearbyShareActivity extends AppCompatActivity {
 
     private void initiatePayment() {
         PaymentInitiateRequest paymentInitiateRequest = new PaymentInitiateRequest(Integer.parseInt(textView.getText().toString()));
-        AfterBankAPIService afterBankAPIService = getAfterBankService();
+        AfterBankAPIService afterBankAPIService = AfterBankRetrofit.getAfterBankAPIInstance();
         Call<PaymentInitiateResponseData> call = afterBankAPIService.paymentInitiate(paymentInitiateRequest);
 
         call.enqueue(new Callback<PaymentInitiateResponseData>() {
@@ -176,7 +170,7 @@ public class NearbyShareActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PaymentInitiateResponseData> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
