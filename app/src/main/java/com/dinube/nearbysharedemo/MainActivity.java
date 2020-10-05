@@ -11,12 +11,16 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dinube.nearbysharedemo.nearby.NearbyAdvertise;
 import com.dinube.nearbysharedemo.nearby.NearbyConnectionLifeCycleCallback;
 import com.dinube.nearbysharedemo.nearby.NearbyDiscover;
+import com.google.android.gms.nearby.connection.Payload;
+import com.google.android.gms.nearby.connection.PayloadCallback;
+import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -35,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textView;
 
+    private TextView nfcUskTextView;
+
     private ImageView imageView;
 
     Button generateQRCodeButton;
@@ -51,12 +57,13 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.message);
         imageView = findViewById(R.id.qrImageView);
         generateQRCodeButton = findViewById(R.id.generateQRButton);
+        nfcUskTextView = findViewById(R.id.nfcUskTextView);
 
         @SuppressLint("UseSwitchCompatOrMaterialCode")
         Switch advertiseSwitch = findViewById(R.id.advertiseSwitch);
         advertiseSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                NearbyAdvertise.startAdvertising(context, endpointName, recyclerView);
+                NearbyAdvertise.startAdvertising(context, endpointName, recyclerView, new NearbyPayloadCallback());
             } else {
                 NearbyAdvertise.stopAdvertising(context, endpointName);
             }
@@ -66,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         Switch discoverSwitch = findViewById(R.id.discoverSwitch);
         discoverSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                NearbyDiscover.startDiscovering(context, endpointName, recyclerView);
+                NearbyDiscover.startDiscovering(context, endpointName, recyclerView, new NearbyPayloadCallback());
             } else {
                 NearbyDiscover.stopDiscovering(context, endpointName);
             }
@@ -97,6 +104,22 @@ public class MainActivity extends AppCompatActivity {
             imageView.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();
+        }
+    }
+
+    class NearbyPayloadCallback extends PayloadCallback {
+
+        @Override
+        public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
+            byte[] receivedBytes = payload.asBytes();
+            String message = new String(receivedBytes);
+            nfcUskTextView.setText(message);
+
+        }
+
+        @Override
+        public void onPayloadTransferUpdate(@NonNull String s, @NonNull PayloadTransferUpdate payloadTransferUpdate) {
+
         }
     }
 }

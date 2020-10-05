@@ -7,14 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dinube.nearbysharedemo.utils.UiUtils;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
+import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.Strategy;
 
 public class NearbyAdvertise {
 
-    public static void startAdvertising(Context context, String endpointName, RecyclerView recyclerView) {
+    public static void startAdvertising(Context context, String endpointName, RecyclerView recyclerView, PayloadCallback payloadCallback) {
         AdvertisingOptions advertisingOptions = new AdvertisingOptions.Builder().setStrategy(Strategy.P2P_CLUSTER).build();
         Nearby.getConnectionsClient(context).startAdvertising(endpointName, "com.dinube.nearbysharedemo",
-                new NearbyConnectionLifeCycleCallback(context, recyclerView), advertisingOptions)
+                new NearbyConnectionLifeCycleCallback(context, recyclerView, payloadCallback), advertisingOptions)
                 .addOnSuccessListener((Void unused) -> {
                     UiUtils.showToast(context, "Advertising ", endpointName);
                 })

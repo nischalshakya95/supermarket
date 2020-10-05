@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,13 +33,16 @@ public class NearbyConnectionLifeCycleCallback extends ConnectionLifecycleCallba
 
     private ConnectionInfo connectionInfo;
 
+    private PayloadCallback payloadCallback;
+
     private static String endpointId;
 
     private final List<NearbyModel> endpoints = new ArrayList<>();
 
-    public NearbyConnectionLifeCycleCallback(Context context, RecyclerView recyclerView) {
+    public NearbyConnectionLifeCycleCallback(Context context, RecyclerView recyclerView, PayloadCallback payloadCallback) {
         this.context = context;
         this.recyclerView = recyclerView;
+        this.payloadCallback = payloadCallback;
     }
 
     @Override
@@ -56,7 +60,7 @@ public class NearbyConnectionLifeCycleCallback extends ConnectionLifecycleCallba
                         (DialogInterface dialog, int which) ->
                                 // The user confirmed, so we can accept the connection.
                                 Nearby.getConnectionsClient(context)
-                                        .acceptConnection(endpointId, new NearbyPayloadCallback(context)))
+                                        .acceptConnection(endpointId, payloadCallback))
                 .setNegativeButton(
                         android.R.string.cancel,
                         (DialogInterface dialog, int which) ->
@@ -112,7 +116,7 @@ public class NearbyConnectionLifeCycleCallback extends ConnectionLifecycleCallba
                         (DialogInterface dialog, int which) ->
                                 // The user confirmed, so we can accept the connection.
                                 Nearby.getConnectionsClient(context)
-                                        .acceptConnection(endpointId, new NearbyPayloadCallback(context)))
+                                        .acceptConnection(endpointId, payloadCallback))
                 .setNegativeButton(
                         android.R.string.cancel,
                         (DialogInterface dialog, int which) ->
@@ -121,25 +125,4 @@ public class NearbyConnectionLifeCycleCallback extends ConnectionLifecycleCallba
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     };
-
-    static class NearbyPayloadCallback extends PayloadCallback {
-
-        private Context context;
-
-        public NearbyPayloadCallback(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
-            byte[] receivedBytes = payload.asBytes();
-            String message = new String(receivedBytes);
-            UiUtils.showToast(context, message);
-        }
-
-        @Override
-        public void onPayloadTransferUpdate(@NonNull String s, @NonNull PayloadTransferUpdate payloadTransferUpdate) {
-
-        }
-    }
 }
